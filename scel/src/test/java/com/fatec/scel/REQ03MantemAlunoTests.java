@@ -66,6 +66,68 @@ public class REQ03MantemAlunoTests {
 		// *********************************************************************************
 		//driver.findElement(By.linkText("Excluir")).click();
 	}
+	@Test
+	public void ct02_atualiza_cep_do_endereco_com_sucesso() {
+		// ***********************************************************************************
+		// dado que o aluno esta cadastrado
+		// ***********************************************************************************
+		driver.findElement(By.name("username")).click();
+		driver.findElement(By.name("username")).sendKeys("jose");
+		driver.findElement(By.name("password")).sendKeys("123");
+		driver.findElement(By.cssSelector("button")).click();
+		driver.findElement(By.linkText("Alunos")).click();
+		espera();
+		driver.findElement(By.id("ra")).click();
+		driver.findElement(By.id("ra")).sendKeys("2222");
+		driver.findElement(By.id("nome")).sendKeys("jose");
+		driver.findElement(By.id("email")).sendKeys("jose@gmail.com");
+		driver.findElement(By.id("cep")).sendKeys("04280130");
+		driver.findElement(By.cssSelector(".btn:nth-child(1)")).click();
+		espera();
+		assertTrue(driver.getPageSource().contains("Rua Frei João"));
+		assertEquals("Rua Frei João", driver.findElement(By.cssSelector("tr:nth-child(2) > td:nth-child(6)")).getText());
+		// **********************************************************************************
+		// quando o usuario altera o CEP do endereco
+		// **********************************************************************************
+		driver.findElement(By.linkText("Editar")).click();
+		driver.findElement(By.cssSelector(".form-group:nth-child(2)")).click();
+		driver.findElement(By.id("cep")).clear();
+		driver.findElement(By.id("cep")).sendKeys("08545160");
+		driver.findElement(By.cssSelector(".btn:nth-child(1)")).click();
+		// ************************************************************************************
+		// entao o sistema apresenta as informações do aluno com o CEP alterado
+		// ************************************************************************************
+		assertTrue(driver.getPageSource().contains("Rua João Soliman"));
+		// ************************************************************************************
+		// teardown - exclusao do registro
+		// ***********************************************************************************
+		//driver.findElement(By.linkText("Excluir")).click();
+	}
+	@Test
+	public void ct03_cadastrar_aluno_ja_cadastrado() {
+			// ******************************************************************************
+			// dado que o aluno esta cadastrado
+			// ******************************************************************************
+			driver.findElement(By.name("username")).click();
+			driver.findElement(By.name("username")).sendKeys("jose");
+			driver.findElement(By.name("password")).sendKeys("123");
+			driver.findElement(By.cssSelector("button")).click();
+			driver.findElement(By.linkText("Alunos")).click();
+			espera();
+			driver.findElement(By.id("ra")).click();
+			driver.findElement(By.id("ra")).sendKeys("aaaa");
+			driver.findElement(By.id("nome")).click();
+			driver.findElement(By.id("nome")).sendKeys("Carlos");
+			driver.findElement(By.id("email")).sendKeys("carlos@gmail.com");
+			driver.findElement(By.id("cep")).sendKeys("04280130");
+			driver.findElement(By.cssSelector(".btn:nth-child(1)")).click();
+			// *******************************************************************************
+			// entao retorna dados invalidos
+			// *******************************************************************************
+			espera();
+			assertEquals("Dados invalidos", driver.findElement(By.cssSelector(".text-danger")).getText());
+	}
+
 	public void espera() {
 		try {
 			Thread.sleep(4000);
